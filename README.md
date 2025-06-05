@@ -4,7 +4,7 @@ A small tool to view the CPU usage of an EC2 instance by its internal IP address
 
 ---
 
-## 🚀 How to Run
+##  How to Run
 
 ### 1. Backend (FastAPI)
 ```bash
@@ -32,12 +32,10 @@ npm start
 
 
 
-## 📌 Notes
 
-- Sample internal IP address: `172.31.88.161`
 - Data is fetched from CloudWatch based on the selected time range (default: 1 hour).
 - You can select a preset time period or enter a custom number of minutes.
 
 ---
 
-Good luck!
+
