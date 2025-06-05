@@ -30,13 +30,7 @@ npm install
 npm start
 ```
 
----
 
-## 🔍 Example Output
-
-![Example](./1b05259b-6965-498c-b10c-02202c4fb23f.png)
-
----
 
 ## 📌 Notes
 
