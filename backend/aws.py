@@ -17,6 +17,8 @@ cloudwatch = boto3.client(
     aws_secret_access_key=SECRET_KEY,
     region_name=REGION,
 )
+
+
 # These functions are intended to be used in an API that receives the internal IP of a machine
 # and returns a CPU usage graph over time.
 def get_cpu_metrics(ip, period_minutes, interval_seconds):
@@ -32,15 +34,18 @@ def get_cpu_metrics(ip, period_minutes, interval_seconds):
         Period=interval_seconds,
         Statistics=['Average']
     )
+    if 'Datapoints' not in metrics or not metrics['Datapoints']:
+        raise ValueError(f"No CPU data found for instance {instance_id}")
 
-    datapoints = sorted(metrics['Datapoints'], key=lambda x: x['Timestamp'])
+    data_points = sorted(metrics['Datapoints'], key=lambda x: x['Timestamp'])
     return [
         {
             "timestamp": dp['Timestamp'].isoformat(),
             "value": dp['Average']
         }
-        for dp in datapoints
+        for dp in data_points
     ]
+
 
 def get_instance_id_by_ip(ip):
     ec2 = boto3.client(
@@ -52,4 +57,8 @@ def get_instance_id_by_ip(ip):
     reservations = ec2.describe_instances(
         Filters=[{'Name': 'private-ip-address', 'Values': [ip]}]
     )["Reservations"]
+
+    if not reservations or not reservations[0]["Instances"]:
+        raise ValueError(f"No EC2 instance found with IP {ip}")
+
     return reservations[0]["Instances"][0]["InstanceId"]
